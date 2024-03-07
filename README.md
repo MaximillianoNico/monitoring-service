@@ -13,6 +13,10 @@ yarn install
 ```bash
 npx knex migrate:latest --knexfile knexfile.ts
 ```
+> And also copy file of .env.dist into file .env, added the credentials on the .env file
+```
+cp .env.dist .env
+```
 > Then, start the service 
 ```
 yarn dev
