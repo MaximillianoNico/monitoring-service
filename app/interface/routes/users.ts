@@ -1,19 +1,26 @@
 import express, { Request, Response } from 'express';
 import { Knex } from 'knex';
+import { getUserFiles, getUserResources } from '../controllers/users';
+import { IRequestMiddleware } from '../../infrastructure/middleware/guard-route';
 
 const router = express.Router();
 const UsersController = ({ db }: { db: Knex }) => {
-  const getUserLost = (req: Request, res: Response) => {
+  const getUserResource = async (req: IRequestMiddleware, res: Response) => {
+    const user = await getUserResources(db, req.userName, req.userId);
+    const files = await getUserFiles(db, req.userId);
     const data = {
       uptime: process.uptime(),
       message: 'Ok',
-      date: new Date()
+      data: {
+        user,
+        files
+      }
     };
 
     res.status(200).send(data);
   }
 
-  router.get('/', getUserLost);
+  router.get('/', getUserResource);
 
   return router;
 }

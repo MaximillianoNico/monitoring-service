@@ -1,5 +1,3 @@
-import path from 'path';
-
 const config = {
   development: {
     client: 'pg',
@@ -11,10 +9,10 @@ const config = {
       port: 5455,
     },
     migrations: {
-      directory: path.resolve(__dirname, 'db', 'migrations'),
+      directory: "./db/migrations",
     },
     seeds: {
-      directory: path.resolve(__dirname, 'db', 'seeds'),
+      directory: "./db/seeds",
     },
   },
   // Add other environments as needed (e.g., production)

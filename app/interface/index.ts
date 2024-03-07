@@ -3,10 +3,13 @@ import healthCheck from './routes/healthcheck';
 import uploader from './routes/uploader';
 import users from './routes/users';
 import { IMainRoute } from './types'
+import GuardRoute from '../infrastructure/middleware/guard-route';
 
 const Interface = ({ app, db, bucket }: IMainRoute) => {
 
   app.use('/app', healthCheck());
+  // @ts-ignore
+  app.use('/api', GuardRoute);
   app.use('/api/files', uploader({ db, bucket }));
   app.use('/api/users', users({ db }));
 

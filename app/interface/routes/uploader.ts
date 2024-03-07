@@ -6,21 +6,16 @@ import multerS3 from 'multer-s3';
 import { S3Client } from '@aws-sdk/client-s3';
 import { getUserResources } from '../controllers/users';
 
-// AWS.config.update({
-//   accessKeyId: process?.env?.AWS_ACCESS_KEY ?? "AKIAQ3EGSUHHI4ZOKNID",
-//   secretAccessKey: process?.env?.AWS_SECRET_KEY ?? "88FwevGLiIdksh5t+x2OeACcmS3S4HQeMsU4Ppyk",
-//   region: 'ap-southeast-2', // e.g., 'us-east-1'
-// });
-
 const router = express.Router();
-// const s3 = new AWS.S3();
 
+const UploaderController = ({ db, bucket }: { db: Knex, bucket: any }) => {
+  
 const s3Client = new S3Client({
   credentials: {
-    accessKeyId: 'AKIAQ3EGSUHHI4ZOKNID',
-    secretAccessKey: '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'
+    accessKeyId: process?.env?.AWS_ACCESS_KEY ?? '',
+    secretAccessKey: process?.env?.AWS_SECRET_KEY ?? ''
   },
-  region: 'ap-southeast-2' // e.g., 'us-east-1'
+  region: process?.env?.AWS_BUCKET_NAME ?? "" // e.g., 'us-east-1'
 });
 
 const storage = multerS3({
@@ -34,7 +29,6 @@ const storage = multerS3({
   },
 })
 
-const UploaderController = ({ db, bucket }: { db: Knex, bucket: any }) => {
   const upload = multer({
     storage,
     fileFilter: async function (req: any, file: any, cb: any) {
@@ -59,9 +53,19 @@ const UploaderController = ({ db, bucket }: { db: Knex, bucket: any }) => {
   const storeFile = async (req: any, res: Response) => {
     const user = await getUserResources(db, req.userName, req.userId);
 
-    const totalStorage = +user.totalStorage + req.headers['content-length'];
+    const totalStorage = +user.totalStorage + +req.headers['content-length'];
 
-    await db('user_storage').insert({ totalStorage })
+    await db('user_storage')
+      .where('user_id', '=', req.userId)
+      .update({ totalStorage })
+
+    console.log('req.file: ', req.file)
+    await db('user_files')
+      .insert({
+        user_id: req.userId,
+        fileName: req.file.location ?? "",
+        fileSize: req.file.size ?? 0,
+      })
 
     return res
       .status(200)
