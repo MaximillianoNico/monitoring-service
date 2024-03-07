@@ -25,5 +25,14 @@ yarn dev
 ## API Docs
 Postman: https://documenter.getpostman.com/view/4055949/2sA2xfXYMW
 
+## Authentication
+for handle authorization, we using format
+```
+Headers
+Authorization: {userId}:{userName}
+```
+
+For the value of userId and userName, users can be listed in the table users
+
 ## Diagram
 https://dbdiagram.io/d/LittleLive-Monitoring-DB-65e8461c7570557c71306c15
