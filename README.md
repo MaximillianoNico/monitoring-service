@@ -1,4 +1,19 @@
 # monitoring-service
 [LittleLive]: Monitoring Service API 
 
-https://aws.plainenglish.io/aws-s3-implementation-using-node-js-f5f5fcacc84b
+## How to run
+> First need to install all dependencies by using 
+```
+yarn install
+```
+> Execute Migration
+```bash
+npx knex migrate:latest --knexfile knexfile.ts
+```
+> Then, start the service 
+```
+yarn dev
+```
+
+## API Docs
+Postman: https://documenter.getpostman.com/view/4055949/2sA2xfXYMW
